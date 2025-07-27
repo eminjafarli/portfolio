@@ -24,6 +24,8 @@ const PageWrapper = styled.div`
         padding: 40px 20px;
         gap: 30px;
         max-height: none;
+        margin-left: -30px;
+        margin-top: 80px;
     }
 `;
 
