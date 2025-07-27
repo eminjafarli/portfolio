@@ -4,37 +4,46 @@ import { motion } from "framer-motion";
 
 const Wrapper = styled.div`
     background-color: white;
-    padding: 120px 30px 60px;
+    padding: 120px 20px 40px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-    height: 479px;
+
+    @media (max-width: 768px) {
+        padding: 80px 16px 30px;
+    }
 `;
 
 const Card = styled.div`
-    position: relative; 
+    position: relative;
     background-color: #f7f7f9;
     border-radius: 24px;
     padding: 20px;
     display: flex;
-    height: 520px;
+    margin-bottom:-61px;
     flex-direction: column;
+    
     text-align: left;
+    height: auto;
+    min-height: 520px;
+
+    @media (max-width: 768px) {
+        min-height: auto;
+    }
 `;
-
-
-const MotionCard = motion(Card);
+const MotionCard = motion(Card)
 
 const GifContainer = styled.div`
     display: flex;
-    gap: 35px;
+    gap: 20px;
     margin-bottom: 15px;
-    height: 80%;
+    height: auto;
     flex-direction: row;
     justify-content: center;
 
     @media (max-width: 768px) {
         flex-direction: column;
+        gap: 15px;
     }
 `;
 
@@ -44,10 +53,6 @@ const GifWrapper = styled.div`
     height: 300px;
     border-radius: 16px;
     overflow: hidden;
-
-    @media (max-width: 768px) {
-        width: 100%;
-    }
 `;
 
 const GifLabel = styled.div`
@@ -68,23 +73,27 @@ const ProjectGif = styled.img`
     object-fit: cover;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    @media (max-width: 768px) {
-        width: 100%;
-    }
 `;
 
 const ProjectTitle = styled.h3`
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 10px;
-    margin-top: -105px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+
+    @media (max-width: 768px) {
+        font-size: 18px;
+    }
 `;
 
 const ProjectDescription = styled.p`
-    font-size: 22px;
+    font-size: 18px;
     color: #676666;
-    margin-top: 0px;
+    margin: 0;
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
 `;
 
 const GitHubButton = styled.a`

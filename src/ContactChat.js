@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import gmailLogo from './gmail.svg';
-import {FaLinkedin, FaGithub, FaInstagram, FaEnvelope, FaWhatsapp} from 'react-icons/fa';
-import {SiGmail} from "react-icons/si";
+import { FaLinkedin, FaGithub, FaInstagram, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
+import { SiGmail } from "react-icons/si";
 
 emailjs.init('Gd4p2ProZXIbj4qwh');
 
@@ -18,6 +17,14 @@ const PageWrapper = styled.div`
     gap: 60px;
     max-height: 434px;
     flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        gap: 30px;
+        max-height: none;
+    }
 `;
 
 const ChatWrapper = styled.div`
@@ -29,7 +36,11 @@ const ChatWrapper = styled.div`
     padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+
+    @media (max-width: 768px) {
+        height: 400px;
+        padding: 15px;
+    }
 `;
 
 const MessagesContainer = styled.div`
@@ -39,6 +50,9 @@ const MessagesContainer = styled.div`
     gap: 12px;
     overflow-y: auto;
     margin-bottom: 10px;
+    overscroll-behavior: contain;
+
+    scroll-behavior: smooth;
 `;
 
 const BotMessageWrapper = styled(motion.div)`
@@ -79,6 +93,11 @@ const Message = styled(motion.div)`
             type === 'bot'
                     ? '0 1px 3px rgba(0,0,0,0.1)'
                     : '0 1px 3px rgba(0,0,0,0.3)'};
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
 `;
 
 const InputBox = styled.form`
@@ -114,6 +133,10 @@ const LinksWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 const LargeLinkCard = styled(motion.a)`
@@ -142,18 +165,30 @@ const LargeLinkCard = styled(motion.a)`
             color: white;
         }
     }
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: auto;
+        padding: 16px;
+    }
 `;
+
 const CardLabel = styled.div`
     margin-top: auto;
     padding-bottom: 5px;
 `;
 
-
 const CardIcon = styled.div`
     margin-top: 30px;
     font-size: 120px;
     color: ${({ color }) => color || '#000'};
+
+    @media (max-width: 768px) {
+        font-size: 90px;
+        margin-top: 20px;
+    }
 `;
+
 const GmailIcon = styled.div`
     display: flex;
     align-items: center;
@@ -165,14 +200,17 @@ const GmailIcon = styled.div`
         width: 125px;
         height: 125px;
         transition: filter 0.3s ease;
+
+        @media (max-width: 768px) {
+            width: 100px;
+            height: 100px;
+        }
     }
 
     ${LargeLinkCard}:hover & img {
         filter: brightness(0) invert(1);
     }
 `;
-
-
 
 const CardButton = styled.a`
     margin-top: -10px;
@@ -188,6 +226,11 @@ const CardButton = styled.a`
 
     &:hover {
         background-color: ${({ bg }) => (bg ? bg + 'cc' : '#222')};
+    }
+
+    @media (max-width: 768px) {
+        font-size: 13px;
+        padding: 6px 14px;
     }
 `;
 
@@ -212,10 +255,12 @@ const ContactChat = () => {
         name: '', email: '', phone: '', subject: '', message: ''
     });
 
-    const messagesEndRef = useRef(null);
+    const messagesContainerRef = useRef(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (messages.length > 2 && messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
     }, [messages]);
 
     useEffect(() => {
@@ -248,9 +293,6 @@ const ContactChat = () => {
         );
     };
 
-    useEffect(() => {
-    }, [step]);
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!input.trim()) return;
@@ -258,7 +300,7 @@ const ContactChat = () => {
         const updatedMessages = [...messages, { type: 'user', text: input }];
 
         const dataKeys = ['name', 'email', 'phone', 'subject', 'message'];
-        let newFormData = {...formData};
+        let newFormData = { ...formData };
         if (step > 0 && step <= dataKeys.length) {
             const key = dataKeys[step - 1];
             newFormData[key] = input;
@@ -295,7 +337,6 @@ const ContactChat = () => {
         }
     };
 
-
     return (
         <PageWrapper>
             <motion.div
@@ -304,7 +345,7 @@ const ContactChat = () => {
                 transition={{ duration: 0.6 }}
             >
                 <ChatWrapper>
-                    <MessagesContainer>
+                    <MessagesContainer ref={messagesContainerRef}>
                         {messages.map((msg, index) => {
                             if (msg.type === 'bot') {
                                 return (
@@ -338,7 +379,6 @@ const ContactChat = () => {
                                 </Message>
                             );
                         })}
-                        <div ref={messagesEndRef} />
                     </MessagesContainer>
                     {step < prompts.length - 1 && (
                         <InputBox onSubmit={handleSubmit}>

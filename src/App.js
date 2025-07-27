@@ -27,6 +27,11 @@ const NavbarWrapper = styled.nav`
     display: flex;
     justify-content: space-around;
     align-items: stretch;
+
+    @media (max-width: 768px) {
+        width: 90%;
+        height: 45px;
+    }
 `;
 
 const StyledLink = styled(NavLink)`
@@ -69,6 +74,11 @@ const Wrapper = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    @media (max-width: 768px) {
+        padding: 100px 15px 40px;
+        grid-template-columns: 1fr;
+    }
 `;
 
 const Card = styled.div`
@@ -80,10 +90,16 @@ const Card = styled.div`
     flex-direction: column;
     text-align: left;
 
+    @media (max-width: 768px) {
+        flex-direction: column;
+        grid-column: span 1 !important;
+        grid-row: auto !important;
+    }
     ${props => props.large && `grid-column: span 2; grid-row: span 2;`}
     ${props => props.long && `grid-column: span 2; grid-row: span 1;`}
     ${props => props.top && `margin-top: 20px;`}
     ${props => props.row && `flex-direction: row; align-items: flex-start;`}
+
 `;
 const MotionCard = motion(Card);
 
@@ -91,6 +107,11 @@ const TextWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-left: 20px;
+
+    @media (max-width: 768px) {
+        margin-left: 95px;
+        align-items: center;
+    }
 `;
 
 const CardImage = styled.img`
@@ -99,20 +120,30 @@ const CardImage = styled.img`
     border-radius: 50%;
     object-fit: cover;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    @media (max-width: 768px) {
+        margin: 0 auto 10px;
+    }
 `;
 
 const PlaceholderTitle = styled.h3`
     font-size: 30px;
     font-weight: 620;
     margin-bottom: -1px;
+    @media (max-width: 768px) {
+        font-size: 24px;
+        margin-left: 0;
+        text-align: center;
+    }
     ${props => props.normal && `
-        margin-top: -15px;
-        margin-left: 27px;
-    `}
+    margin-top: -15px;
+    margin-left: 27px;
+  `}
     ${props => props.project && `
-        margin-top: -15px;
-        margin-left: 0px;
-    `}
+    margin-top: -15px;
+    margin-left: 0px;
+  `}
+    
 `;
 
 const FooterWrapper = styled.footer`
@@ -121,9 +152,15 @@ const FooterWrapper = styled.footer`
     padding: 20px;
     font-size: 14px;
     color: #777;
-    margin-left: 275px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 45px;
     background-color: transparent;
+
+    @media (max-width: 768px) {
+        width: 90%;
+        font-size: 13px;
+    }
 `;
 const Footer = () => (
     <FooterWrapper>
@@ -135,10 +172,15 @@ const PlaceholderText = styled.p`
     font-size: 16px;
     color: #676666;
     margin-bottom: -5px;
-
+    @media (max-width: 768px) {
+        font-size: 15px;
+        ${props => props.bigtext && `font-size: 18px;`}
+        text-align: center;
+    }
     ${props => props.bigtext && `
-        font-size: 24px;
-    `}
+    font-size: 24px;
+  `}
+    
 `;
 
 const SkillsGrid = styled.div`
@@ -147,6 +189,10 @@ const SkillsGrid = styled.div`
     gap: 16px;
     margin-top: 20px;
     margin-left: 8px;
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
 `;
 
 const Skill = styled.div`
@@ -155,20 +201,25 @@ const Skill = styled.div`
     gap: 8px;
     font-size: 16px;
     color: #676666;
+
+    @media (max-width: 768px) {
+        justify-content: center;
+    }
 `;
 
 const ProjectList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
 `;
+
 const HoverLabel = styled(motion.div)`
     position: absolute;
-    left: 100%;        
-    bottom: 50%;         
+    left: 100%;
+    bottom: 50%;
     transform: translateY(-50%);
-    margin-left:-85px;
+    margin-left: -85px;
     margin-bottom: 28px;
     background: white;
     color: #333;
@@ -181,18 +232,15 @@ const HoverLabel = styled(motion.div)`
     z-index: 1003;
 `;
 
-
-
-
 const Overlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.95);
-  z-index: 500;
-  pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 500;
+    pointer-events: none;
 `;
 
 const CardArrowButton = styled.button`
@@ -212,8 +260,7 @@ const CardArrowButton = styled.button`
     transition: transform 0.2s;
 
     &:hover {
-        transform:rotate(-45deg);
-
+        transform: rotate(-45deg);
     }
 
     svg {
@@ -225,25 +272,25 @@ const CardArrowButton = styled.button`
 
 const ProjectCard = styled.div`
     margin-top: 15px;
-  background-color: #e8e8e8;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+    background-color: #e8e8e8;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: #dcdcdc;
-  }
+    &:hover {
+        background-color: #dcdcdc;
+    }
 
-  h4 {
-    margin: 0 0 8px 0;
-  }
+    h4 {
+        margin: 0 0 8px 0;
+    }
 
-  p {
-    margin: 0;
-    color: #444;
-  }
+    p {
+        margin: 0;
+        color: #444;
+    }
 `;
 
 const projectsData = [
@@ -252,6 +299,7 @@ const projectsData = [
         description: "Bookstore is a web application that allows users to browse, add, edit, and manage books."
     }
 ];
+
 
 const HomePage = () => {
     const navigate = useNavigate();

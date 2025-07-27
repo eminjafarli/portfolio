@@ -12,17 +12,24 @@ const GridWrapper = styled.div`
     margin: 0 auto;
     background-color: white;
     align-items: center;
-    max-height: 379px ;
+    max-height: 379px;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
+        padding: 100px 20px;
+        max-height: none;
     }
 `;
+
 const Column = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
     height: 100%;
+
+    @media (max-width: 768px) {
+        gap: 15px;
+    }
 `;
 
 const MotionCard = styled(motion.div)`
@@ -31,29 +38,38 @@ const MotionCard = styled(motion.div)`
     padding: 21px;
     text-align: left;
     font-size: 16px;
-    flex: 1; 
-`;
+    flex: 1;
 
+    @media (max-width: 768px) {
+        padding: 18px;
+        font-size: 15px;
+    }
+`;
 
 const Title = styled.h3`
-  font-size: 22px;
-  margin-bottom: 8px;
+    font-size: 22px;
+    margin-bottom: 8px;
     margin-top: 8px;
-`;
 
+    @media (max-width: 768px) {
+        font-size: 20px;
+    }
+`;
 
 const Text = styled.p`
-  color: #666;
+    color: #666;
     font-size: 17px;
-`;
 
+    @media (max-width: 768px) {
+        font-size: 15px;
+    }
+`;
 
 const fadeUp = {
     initial: { opacity: 0, y: 40 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 }
 };
-
 const AboutPage = () => {
     return (
         <GridWrapper>
