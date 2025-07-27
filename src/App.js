@@ -109,6 +109,7 @@ const TextWrapper = styled.div`
     margin-left: 20px;
 
     @media (max-width: 768px) {
+        margin-left: 45px;
         align-items: center;
     }
 `;
