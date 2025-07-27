@@ -18,6 +18,7 @@ const GridWrapper = styled.div`
         grid-template-columns: 1fr;
         padding: 100px 20px;
         max-height: none;
+        margin-top:20px;
     }
 `;
 

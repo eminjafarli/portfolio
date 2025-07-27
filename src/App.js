@@ -11,6 +11,7 @@ import AboutPage from "./AboutPage";
 import {Route, Routes, NavLink, BrowserRouter as Router, useNavigate} from "react-router-dom";
 import ContactChat from "./ContactChat";
 import ProjectPage from "./ProjectPage";
+import ScrollToTop from "./ScrollToTop";
 
 const NavbarWrapper = styled.nav`
     width: 33%;
@@ -486,6 +487,7 @@ function App() {
     return (
         <Router>
             <Navbar />
+            <ScrollToTop />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />

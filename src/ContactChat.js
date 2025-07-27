@@ -137,7 +137,7 @@ const LinksWrapper = styled.div`
     gap: 20px;
 
     @media (max-width: 768px) {
-        grid-template-columns: 1fr;
+        gap:70px;
     }
 `;
 
@@ -172,6 +172,7 @@ const LargeLinkCard = styled(motion.a)`
         width: 100%;
         height: auto;
         padding: 16px;
+        margin-bottom: -32px;
     }
 `;
 
@@ -329,10 +330,10 @@ const ContactChat = () => {
                     'Gd4p2ProZXIbj4qwh'
                 ).then(
                     (response) => {
-                        console.log('✅ Email успешно отправлен!', response.status, response.text);
+                        console.log('✅ Email send!', response.status, response.text);
                     },
                     (err) => {
-                        console.error('❌ Ошибка отправки email:', err);
+                        console.error('❌ Error sending email:', err);
                     }
                 );
             }, 500);
