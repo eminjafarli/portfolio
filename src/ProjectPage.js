@@ -77,7 +77,7 @@ const ProjectGif = styled.img`
 `;
 
 const ProjectTitle = styled.h3`
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 600;
     margin-top: 20px;
     margin-bottom: 8px;
@@ -88,7 +88,7 @@ const ProjectTitle = styled.h3`
 `;
 
 const ProjectDescription = styled.p`
-    font-size: 18px;
+    font-size: 20px;
     color: #676666;
     margin: 0;
 
@@ -129,9 +129,7 @@ const ProjectsPage = () => {
     const projects = [
         {
             title: "BookStore App",
-            description: " BookStore is a full-stack web app built with Java Spring Boot, SQL, and React. \n" +
-                "    After logging in, users choose between managing members or books. The members dashboard lets admins view/edit user details with modals. \n" +
-                "    The books dashboard is public — regular users can view and download books, while authorized roles can upload and manage them.",
+            description: " The Bookstore project is a web application that allows users to browse, search, and view details about a collection of books. Registered users can manage their own book lists, while admins have access to add, update, or delete books from the system. The platform features a clean and responsive design, user authentication, and role-based access control. It was built to simulate a real-world social media, combining both frontend and backend technologies for a complete experience.",
             gifs: ["/book-admin.gif", "/book-user.gif"],
             githubUrl: "https://github.com/eminjafarli/BookStore"
         }
