@@ -248,7 +248,7 @@ const ProjectCard = styled.div`
 
 const projectsData = [
     {
-        title: "Portfolio Website",
+        title: "BookStore App",
         description: "Bookstore is a web application that allows users to browse, add, edit, and manage books."
     }
 ];
