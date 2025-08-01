@@ -244,7 +244,7 @@ const ContactChat = () => {
         "Can I have your email?",
         "Send me your mobile number please.",
         "What's the subject of your message?",
-        "Alright! Send me your message.",
+        "Alright! Send me the message.",
         "Thank you for your message!\nI'll text you back as soon as possible."
     ];
 
