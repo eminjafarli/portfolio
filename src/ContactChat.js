@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import {AnimatePresence, motion} from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import gmailLogo from './gmail.svg';
 import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa';
+import {motion} from "framer-motion";
 
 emailjs.init('Gd4p2ProZXIbj4qwh');
 
@@ -41,22 +41,6 @@ const ChatWrapper = styled.div`
     @media (max-width: 768px) {
         height: 400px;
         padding: 15px;
-    }
-`;
-const Notification = styled(motion.div)`
-    position: fixed;
-    top: 20px;
-    left: 31%;
-    transform: translateX(-50%);
-    padding: 12px 24px;
-    border-radius: 8px;
-    color: white;
-    background: ${(props) => (props.success ? "#28a745" : "#dc3545")};
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    @media (max-width: 768px) {
-        left:5%;
-        margin-right:5%;
     }
 `;
 const MessagesContainer = styled.div`
@@ -229,28 +213,6 @@ const GmailIcon = styled.div`
     }
 `;
 
-const CardButton = styled.a`
-    margin-top: -10px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background-color: ${({ bg }) => bg || '#000'};
-    color: white;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s;
-
-    &:hover {
-        background-color: ${({ bg }) => (bg ? bg + 'cc' : '#222')};
-    }
-
-    @media (max-width: 768px) {
-        font-size: 13px;
-        padding: 6px 14px;
-    }
-`;
-
 const MAX_EMAILS = 5;
 const EMAIL_STORAGE_KEY = 'emailCount';
 const TIMESTAMP_KEY = 'lastResetTime';
@@ -276,7 +238,7 @@ const ContactChat = () => {
         name: '', email: '', phone: '', subject: '', message: ''
     });
     const [emailCount, setEmailCount] = useState(0);
-    const [notification, setNotification] = useState(null);
+    const [inputVisible, setInputVisible] = useState(true);
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {
@@ -294,12 +256,13 @@ const ContactChat = () => {
             localStorage.setItem(EMAIL_STORAGE_KEY, '0');
             localStorage.setItem(TIMESTAMP_KEY, now.toString());
             setEmailCount(0);
+            setInputVisible(true);
         } else {
             setEmailCount(storedCount);
+            setInputVisible(storedCount < MAX_EMAILS);
         }
     }, []);
 
-    const canSendEmail = () => emailCount < MAX_EMAILS;
 
     const incrementEmailCount = () => {
         const newCount = emailCount + 1;
@@ -311,11 +274,6 @@ const ContactChat = () => {
         e.preventDefault();
         if (!input.trim()) return;
 
-        if (!canSendEmail()) {
-            setNotification({message: "You've reached the limit of 5 messages in 24 hours. Please try again later.", success: false});
-            setTimeout(() => setNotification(null), 2000);
-            return;
-        }
 
         const updatedMessages = [...messages, { type: 'user', text: input }];
         const dataKeys = ['name', 'email', 'phone', 'subject', 'message'];
@@ -349,6 +307,9 @@ const ContactChat = () => {
                     (response) => {
                         console.log('✅ Email sent!', response.status, response.text);
                         incrementEmailCount();
+                        if (emailCount + 1 >= MAX_EMAILS) {
+                            setInputVisible(false);
+                        }
                     },
                     (err) => {
                         console.error('❌ Error sending email:', err);
@@ -370,6 +331,7 @@ const ContactChat = () => {
                     <MessagesContainer ref={messagesContainerRef}>
                         {messages.map((msg, index) => {
                             if (msg.type === 'bot') {
+                                const showHeader = index === 0 || messages[index - 1].type !== 'bot';
                                 return (
                                     <BotMessageWrapper
                                         key={index}
@@ -377,18 +339,27 @@ const ContactChat = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.4 }}
                                     >
-                                        <BotHeader>
-                                            <BotAvatar src="/emin-avatar.jpg" alt="Bot" />
-                                            <BotName>Emin</BotName>
-                                        </BotHeader>
-                                        <Message type="bot">
-                                            {msg.text.split('\n').map((line, idx) => (
-                                                <div key={idx}>{line}</div>
-                                            ))}
-                                        </Message>
+                                        {showHeader && (
+                                            <BotHeader>
+                                                <BotAvatar src="/emin-avatar.jpg" alt="Bot" />
+                                                <BotName>Emin</BotName>
+                                            </BotHeader>
+                                        )}
+                                        {inputVisible ? (
+                                            <Message type="bot">
+                                                {msg.text.split('\n').map((line, idx) => (
+                                                    <div key={idx}>{line}</div>
+                                                ))}
+                                            </Message>
+                                        ) : index === messages.length - 1 && (
+                                            <Message type="bot" style={{ maxWidth: '300px', lineHeight: '1.4' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                                You’ve reached the message limit for today. Please come back later.
+                                            </Message>
+                                        )}
                                     </BotMessageWrapper>
                                 );
                             }
+
                             return (
                                 <Message
                                     key={index}
@@ -402,7 +373,7 @@ const ContactChat = () => {
                             );
                         })}
                     </MessagesContainer>
-                    {step < prompts.length - 1 && (
+                    {step < prompts.length - 1 && inputVisible && (
                         <InputBox onSubmit={handleSubmit}>
                             <Input
                                 type="text"
@@ -412,6 +383,7 @@ const ContactChat = () => {
                                 autoFocus
                             />
                             <SendButton type="submit">Send</SendButton>
+
                         </InputBox>
                     )}
                 </ChatWrapper>
@@ -471,19 +443,6 @@ const ContactChat = () => {
                     LinkedIn
                 </LargeLinkCard>
             </LinksWrapper>
-            <AnimatePresence>
-                {notification && (
-                    <Notification
-                        success={notification.success}
-                        initial={{y: -100, opacity: 0}}
-                        animate={{y: 0, opacity: 1}}
-                        exit={{y: -100, opacity: 0}}
-                        transition={{duration: 0.5}}
-                    >
-                        {notification.message}
-                    </Notification>
-                )}
-            </AnimatePresence>
         </PageWrapper>
     );
 };
