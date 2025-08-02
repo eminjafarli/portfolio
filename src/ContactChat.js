@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import gmailLogo from './gmail.svg';
-import { FaLinkedin, FaGithub, FaInstagram, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
-import { SiGmail } from "react-icons/si";
+import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa';
 
 emailjs.init('Gd4p2ProZXIbj4qwh');
 
@@ -237,6 +236,10 @@ const CardButton = styled.a`
     }
 `;
 
+const MAX_EMAILS = 5;
+const EMAIL_STORAGE_KEY = 'emailCount';
+const TIMESTAMP_KEY = 'lastResetTime';
+
 const ContactChat = () => {
     const prompts = [
         "Want to work together? Send me a text here.",
@@ -257,6 +260,7 @@ const ContactChat = () => {
     const [formData, setFormData] = useState({
         name: '', email: '', phone: '', subject: '', message: ''
     });
+    const [emailCount, setEmailCount] = useState(0);
 
     const messagesContainerRef = useRef(null);
 
@@ -267,43 +271,40 @@ const ContactChat = () => {
     }, [messages]);
 
     useEffect(() => {
-        if (step === prompts.length - 1) {
-            sendEmail();
+        const storedTime = localStorage.getItem(TIMESTAMP_KEY);
+        const storedCount = parseInt(localStorage.getItem(EMAIL_STORAGE_KEY) || '0');
+        const now = Date.now();
+
+        if (!storedTime || now - parseInt(storedTime) > 24 * 60 * 60 * 1000) {
+            localStorage.setItem(EMAIL_STORAGE_KEY, '0');
+            localStorage.setItem(TIMESTAMP_KEY, now.toString());
+            setEmailCount(0);
+        } else {
+            setEmailCount(storedCount);
         }
-    }, [step]);
+    }, []);
 
-    const sendEmail = () => {
-        const templateParams = {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            message: formData.message,
-        };
+    const canSendEmail = () => emailCount < MAX_EMAILS;
 
-        emailjs.send(
-            'service_glig86q',
-            'template_iijzofx',
-            templateParams,
-            'Gd4p2ProZXIbj4qwh'
-        ).then(
-            (response) => {
-                console.log('✅ Email successfully sent!', response.status, response.text);
-            },
-            (err) => {
-                console.error('❌ Failed to send email:', err);
-            }
-        );
+    const incrementEmailCount = () => {
+        const newCount = emailCount + 1;
+        localStorage.setItem(EMAIL_STORAGE_KEY, newCount.toString());
+        setEmailCount(newCount);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
-        const updatedMessages = [...messages, { type: 'user', text: input }];
+        if (!canSendEmail()) {
+            alert("You've reached the limit of 5 messages in 24 hours. Please try again later.");
+            return;
+        }
 
+        const updatedMessages = [...messages, { type: 'user', text: input }];
         const dataKeys = ['name', 'email', 'phone', 'subject', 'message'];
         let newFormData = { ...formData };
+
         if (step > 0 && step <= dataKeys.length) {
             const key = dataKeys[step - 1];
             newFormData[key] = input;
@@ -330,7 +331,8 @@ const ContactChat = () => {
                     'Gd4p2ProZXIbj4qwh'
                 ).then(
                     (response) => {
-                        console.log('✅ Email send!', response.status, response.text);
+                        console.log('✅ Email sent!', response.status, response.text);
+                        incrementEmailCount();
                     },
                     (err) => {
                         console.error('❌ Error sending email:', err);
@@ -339,6 +341,7 @@ const ContactChat = () => {
             }, 500);
         }
     };
+
 
     return (
         <PageWrapper>
