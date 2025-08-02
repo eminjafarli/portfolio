@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import {AnimatePresence, motion} from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import gmailLogo from './gmail.svg';
 import { FaLinkedin, FaGithub, FaWhatsapp } from 'react-icons/fa';
@@ -43,7 +43,22 @@ const ChatWrapper = styled.div`
         padding: 15px;
     }
 `;
-
+const Notification = styled(motion.div)`
+    position: fixed;
+    top: 20px;
+    left: 31%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    background: ${(props) => (props.success ? "#28a745" : "#dc3545")};
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    @media (max-width: 768px) {
+        left:5%;
+        margin-right:5%;
+    }
+`;
 const MessagesContainer = styled.div`
     flex-grow: 1;
     display: flex;
@@ -261,7 +276,7 @@ const ContactChat = () => {
         name: '', email: '', phone: '', subject: '', message: ''
     });
     const [emailCount, setEmailCount] = useState(0);
-
+    const [notification, setNotification] = useState(null);
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {
@@ -297,7 +312,8 @@ const ContactChat = () => {
         if (!input.trim()) return;
 
         if (!canSendEmail()) {
-            alert("You've reached the limit of 5 messages in 24 hours. Please try again later.");
+            setNotification({message: "You've reached the limit of 5 messages in 24 hours. Please try again later.", success: false});
+            setTimeout(() => setNotification(null), 2000);
             return;
         }
 
@@ -455,6 +471,19 @@ const ContactChat = () => {
                     LinkedIn
                 </LargeLinkCard>
             </LinksWrapper>
+            <AnimatePresence>
+                {notification && (
+                    <Notification
+                        success={notification.success}
+                        initial={{y: -100, opacity: 0}}
+                        animate={{y: 0, opacity: 1}}
+                        exit={{y: -100, opacity: 0}}
+                        transition={{duration: 0.5}}
+                    >
+                        {notification.message}
+                    </Notification>
+                )}
+            </AnimatePresence>
         </PageWrapper>
     );
 };
