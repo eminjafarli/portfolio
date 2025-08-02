@@ -28,6 +28,10 @@ const NavbarWrapper = styled.nav`
     display: flex;
     justify-content: space-around;
     align-items: stretch;
+    background-color: rgba(255, 255, 255, 0.3); 
+    backdrop-filter: blur(10px);             
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
     @media (max-width: 768px) {
         width: 90%;
